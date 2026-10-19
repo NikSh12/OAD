@@ -17,15 +17,21 @@ namespace CharacterSelect
                 Console.WriteLine("1) Wojownik");
                 Console.WriteLine("2) Mag");
                 Console.WriteLine("3) Łotrzyk");
+                Console.WriteLine("4) Rycerz");
+                Console.WriteLine("5) Łucznik");
+                Console.WriteLine("6) Nekromanta");
                 Console.WriteLine("0) Wyjście");
-                Console.Write("Wybierz klasę [0-3]: ");
+                Console.Write("Wybierz klasę [0-6]: ");
 
                 var input = Console.ReadLine();
-                if (input == "0") break;
 
-                if (!int.TryParse(input, out var choice) || choice < 1 || choice > 3)
+                if (input == "0")
+                    break;
+
+                if (!int.TryParse(input, out var choice) ||
+                    choice < 1 || choice > 6)
                 {
-                    Pause("Niepoprawny wybór. Naciśnij Enter…");
+                    Pause("Niepoprawny wybór. Naciśnij Enter...");
                     continue;
                 }
 
@@ -35,23 +41,46 @@ namespace CharacterSelect
                 var name = Console.ReadLine();
 
                 var character = CharacterFactory.Create(cls, name);
+                bool returnToMain = false;
 
-                Console.Clear();
-                Console.WriteLine(">>> Utworzono postać!");
-                character.Describe();
+                while (!returnToMain)
+                {
+                    Console.Clear();
+                    Console.WriteLine(">>> UTWORZONO POSTAĆ!");
+                    character.Describe();
 
-                // Console.WriteLine("\nAkcja: atak");
-                // character.Attack();
-                //
-                // Console.WriteLine("Akcja: umiejętność specjalna");
-                // character.UseSpecial();
+                    Console.WriteLine("\n=== MENU AKCJI ===");
+                    Console.WriteLine("1) Atak");
+                    Console.WriteLine("2) Umiejętność specjalna");
+                    Console.WriteLine("3) Powrót");
+                    Console.Write("Wybierz akcję [1-3]: ");
 
-                Console.WriteLine("\nChcesz utworzyć kolejną postać? (t/n): ");
-                var again = (Console.ReadLine() ?? "").Trim().ToLowerInvariant();
-                if (again != "t" && again != "tak") break;
+                    var action = Console.ReadLine();
+
+                    switch (action)
+                    {
+                        case "1":
+                            character.Attack();
+                            Pause("\nNaciśnij Enter, aby kontynuować...");
+                            break;
+
+                        case "2":
+                            character.UseSpecial();
+                            Pause("\nNaciśnij Enter, aby kontynuować...");
+                            break;
+
+                        case "3":
+                            returnToMain = true;
+                            break;
+
+                        default:
+                            Pause("Niepoprawny wybór. Naciśnij Enter...");
+                            break;
+                    }
+                }
             }
 
-            Console.WriteLine("\nDzięki za grę! Do zobaczenia 👋");
+            Console.WriteLine("\nDzięki za grę! Do zobaczenia!");
         }
 
         private static void Pause(string msg)
